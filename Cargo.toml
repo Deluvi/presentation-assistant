@@ -5,3 +5,8 @@ authors = ["Deluvi <noe.baylac@snips.ai>"]
 edition = "2018"
 
 [dependencies]
+hermes = { git = "https://github.com/snipsco/hermes-protocol", tag = "0.65.3" }
+hermes-mqtt = { git = "https://github.com/snipsco/hermes-protocol", tag = "0.65.3" }
+snips-nlu-ontology = { git = "https://github.com/snipsco/snips-nlu-ontology", tag = "0.64.6" }
+
+websocket = "0.22.4"
