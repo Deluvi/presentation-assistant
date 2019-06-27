@@ -1,0 +1,7 @@
+[package]
+name = "presentation-assistant"
+version = "0.1.0"
+authors = ["Deluvi <noe.baylac@snips.ai>"]
+edition = "2018"
+
+[dependencies]
