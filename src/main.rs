@@ -15,18 +15,19 @@ struct PresServer {
     protocol_handler: Box<dyn HermesProtocolHandler>,
 }
 
-fn generate_message_from_intent(message: &NluIntentMessage) -> String {
+fn generate_message_from_intent(message: &NluIntentMessage) -> Option<String> {
     match message.intent.intent_name.as_str() {
-        "Deluvi:diapoNextSlide" => "NextSlide".to_string(),
-        "Deluvi:diapoPreviousSlide" => "PreviousSlide".to_string(),
-        "Deluvi:diapoGoNumber" => {
-            let number = match message.slots[0].nlu_slot.value {
+        "Deluvi:diapoNextSlide" => Some("NextSlide".to_string()),
+        "Deluvi:diapoPreviousSlide" => Some("PreviousSlide".to_string()),
+        "Deluvi:diapoGoNumber" => message.slots.get(0).and_then(|slot| {
+            let number = match slot.nlu_slot.value {
                 SlotValue::Number(value) => value.value as u32,
-                _ => panic!("Expected only a number on this slot"),
+                _ => return None,
             };
-            format!("GoToSlide({})", number)
-        }
-        _ => "unknown".to_string(),
+
+            Some(format!("GoToSlide({})", number))
+        }),
+        _ => None,
     }
 }
 
@@ -51,31 +52,35 @@ fn main() {
             .subscribe_intent_parsed(Callback::<NluIntentMessage>::new(
                 move |intent: &NluIntentMessage| {
                     let mut pres_server = pres_server_copy.lock().unwrap();
-                    let message = OwnedMessage::Text(generate_message_from_intent(intent));
+                    if let Some(message) = generate_message_from_intent(intent) {
+                        let message = OwnedMessage::Text(message);
 
-                    let mut to_remove: Vec<usize> = Vec::new();
+                        let mut to_remove: Vec<usize> = Vec::new();
 
-                    for (client, i) in pres_server.clients.iter_mut().zip(0..) {
-                        if let Err(e) = client.send_message(&message) {
-                            println!("Client removed because of error {}", e);
-                            to_remove.push(i);
+                        for (client, i) in pres_server.clients.iter_mut().zip(0..) {
+                            if let Err(e) = client.send_message(&message) {
+                                println!("Client removed because of error {}", e);
+                                to_remove.push(i);
+                            }
                         }
-                    }
 
-                    to_remove.reverse();
-                    for i in to_remove {
-                        pres_server.clients.remove(i);
-                    }
+                        to_remove.reverse();
+                        for i in to_remove {
+                            pres_server.clients.remove(i);
+                        }
 
-                    if let Some(session_id) = &intent.session_id {
-                        pres_server
-                            .protocol_handler
-                            .dialogue()
-                            .publish_end_session(EndSessionMessage {
-                                session_id: session_id.to_string(),
-                                text: None,
-                            })
-                            .unwrap();
+                        if let Some(session_id) = &intent.session_id {
+                            pres_server
+                                .protocol_handler
+                                .dialogue()
+                                .publish_end_session(EndSessionMessage {
+                                    session_id: session_id.to_string(),
+                                    text: None,
+                                })
+                                .unwrap();
+                        }
+                    } else {
+                        println!("Received a weird formatted intent : {:?}", intent);
                     }
                 },
             ))
