@@ -1,0 +1,5 @@
+[workspace]
+members = [
+  "revealjs-based-presentation-assistant/",
+  "key-based-presentation-assistant/",
+]
