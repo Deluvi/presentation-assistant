@@ -4,7 +4,12 @@ Action code and template for my [RevealJS](https://github.com/hakimel/reveal.js)
 
 ## Setup 💻
 
-Install the associated Snips app on your assistant. Install the Snips platform and your assistant on your device. Start the action code and open your Reveal JS presentation on a webserver or your favorite slideshow software.
+Install the associated Snips app on your assistant :
+
+French 🇫 🥖 : [Diaporama](https://console.snips.ai/store/fr/skill_gw50Xzv0X4Q)
+English 🇬🇺🇸: Coming Soon™
+
+Install the Snips platform and your assistant on your device. Start the action code and open your Reveal JS presentation on a webserver or your favorite slideshow software.
 
 ## Build 🛠
 
