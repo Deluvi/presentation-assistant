@@ -6,8 +6,8 @@ Action code and template for my [RevealJS](https://github.com/hakimel/reveal.js)
 
 Install the associated Snips app on your assistant :
 
-French 🇫 🥖 : [Diaporama](https://console.snips.ai/store/fr/skill_gw50Xzv0X4Q)
-English 🇬🇺🇸: Coming Soon™
+- 🇫🇷 French : [Diaporama](https://console.snips.ai/store/fr/skill_gw50Xzv0X4Q)
+- 🇬🇧 English : Coming Soon™
 
 Install the Snips platform and your assistant on your device. Start the action code and open your Reveal JS presentation on a webserver or your favorite slideshow software.
 
@@ -27,7 +27,7 @@ If you want to run your action code, type:
 cargo run --release
 ```
 
-### Notes for the RevealJS action code
+### Notes for the RevealJS action code ❗️
 
 Because of security restrictions on your browser, you should run your RevealJS presentation on a webserver to be able to access the action code. If you have Python 3 on your computer for example, set your current directory to the RevealJS folder and use the following command to host a webserver:
 
